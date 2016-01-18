@@ -137,8 +137,20 @@ function poiOperatorClaim(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, Cu
 	      stmt:step()
 	      db:close()
 
-				cRoot:Get():BroadcastChat(colourPrimary .. Player:GetName() .. stringClaim[1] .. poiList[i][1])
+				if (setClaimBroadcast == "player") then
+					Player:SendMessageSuccess(colourPrimary .. Player:GetName() .. stringClaim[1] .. poiList[i][1])
+				elseif (setClaimBroadcast == "world") then
+					Player:GetWorld():BroadcastChat(colourPrimary .. Player:GetName() .. stringClaim[1] .. poiList[i][1])
+				elseif (setClaimBroadcast == "global") then
+					cRoot:Get():BroadcastChat(colourPrimary .. Player:GetName() .. stringClaim[1] .. poiList[i][1])
+				elseif (setClaimBroadcast ~= "none") then
+					LOG(stringSettings[1] .. " setClaimBroadcast = " .. setClaimBroadcast)
+				end
+
 				poiOperatorUpdateSign(Player, BlockX, BlockY, BlockZ)
+				poiOperatorEffect(Player, BlockX, BlockY, BlockZ)
+				poiOperatorRewardXP(Player, BlockX, BlockY, BlockZ)
+				poiOperatorRewardItem(Player, BlockX, BlockY, BlockZ)
 	      createArrayClaimedList()
 			end
       return true;
@@ -167,6 +179,39 @@ function poiOperatorUpdateSign(Player, BlockX, BlockY, BlockZ)
     end
     i = i + 1
   end
+end
+
+--
+
+function poiOperatorEffect(Player, BlockX, BlockY, BlockZ)
+	if (setClaimEffectEnabled == 1) then
+		Player:GetWorld():BroadcastParticleEffect(setClaimEffect, BlockX, BlockY, BlockZ, 0, 0, 0, 1, setClaimEffectAmmount)
+	end
+end
+
+--
+
+function poiOperatorRewardXP(Player, BlockX, BlockY, BlockZ)
+	if (setRewardxpEnabled == 1) then
+		if (setRewardxpSplashEnabled == 1) then
+			Player:GetWorld():CreateProjectile(BlockX, BlockY, BlockZ, 73, nil, cItem())
+		end
+		Player:GetWorld():SpawnExperienceOrb(BlockX, BlockY, BlockZ, setRewardxpAmmount)
+	end
+end
+
+--
+
+function poiOperatorRewardItem(Player, BlockX, BlockY, BlockZ)
+	if (setRewardItemEnabled == 1) then
+		local item = cItem(setRewardItem, setRewardItemAmmount)
+		local itemsAdded = Player:GetInventory():AddItem(item)
+		if (itemsAdded == item.m_ItemCount) then
+	  	Player:SendMessageSuccess(stringReward[1]);
+		else
+		  Player:SendMessageFailure(stringReward[2]);
+		end
+	end
 end
 
 --

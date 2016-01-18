@@ -16,6 +16,10 @@ stringMain = {
   colourPrimary .. "/poi" .. colourSecondary  .." purgeplayer [player]" .. colourDefault .. " - Purge all claims of a player"
 }
 
+stringSettings = {
+  "Unknown Setting:"
+}
+
 stringPermissions = {
   colourInfo .. "insufficient permissions..."
 }
@@ -68,6 +72,11 @@ stringCreate = {
 stringClaim = {
   colourSecondary .. " just found a Point Of Interest named: " .. colourPrimary ,
   colourInfo .. "You have already found this Point Of Interest"
+}
+
+stringReward = {
+  "Item reward was added to your inventory",
+  "Item reward did not fit into your inventory"
 }
 
 stringSign = {
