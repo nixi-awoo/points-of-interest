@@ -38,6 +38,7 @@ end
 function createArrayPoiList()
   -- Create an array of all POIs
   poiList = {}
+	poiListNextId = 0
 
   local i = 0
   local db = sqlite3.open(PLUGIN:GetLocalFolder() .. "/database.sqlite3")
@@ -48,6 +49,11 @@ function createArrayPoiList()
     poiList[i][2] = row.poi_x
     poiList[i][3] = row.poi_y
     poiList[i][4] = row.poi_z
+
+		if (poiList[i][0] >= poiListNextId) then
+			poiListNextId = poiList[i][0]+1
+		end
+
     i = i + 1
   end
   db:close()
@@ -59,6 +65,7 @@ end
 function createArrayClaimedList()
   -- Create an array of all Claims
   claimedList = {}
+	claimedListNextId = 0
 
   local i = 0
   local db = sqlite3.open(PLUGIN:GetLocalFolder() .. "/database.sqlite3")
@@ -67,10 +74,15 @@ function createArrayClaimedList()
     claimedList[i][0] = row.claimed_id
     claimedList[i][1] = row.poi_id
     claimedList[i][2] = row.player_name
+
+		if (claimedList[i][0] >= claimedListNextId) then
+			claimedListNextId = claimedList[i][0]+1
+		end
+
     i = i + 1
   end
   db:close()
-  claimedListAmmount = i
+	claimedListAmmount = i
 end
 
 --
@@ -92,7 +104,7 @@ function poiOperatorCreate(World, BlockX, BlockY, BlockZ, Line1, Line2, Line3, L
 
 	    local db = sqlite3.open(PLUGIN:GetLocalFolder() .. "/database.sqlite3")
 	    local stmt = db:prepare("INSERT INTO poi_list (poi_id, poi_name, poi_x, poi_y, poi_z) VALUES (?, ?, ?, ?, ?)")
-			stmt:bind(1, os.time())
+			stmt:bind(1, poiListNextId)
 			stmt:bind(2, poiName)
 	    stmt:bind(3, BlockX)
 	    stmt:bind(4, BlockY)
@@ -131,7 +143,7 @@ function poiOperatorClaim(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, Cu
 
 	      local db = sqlite3.open(PLUGIN:GetLocalFolder() .. "/database.sqlite3")
 	      local stmt = db:prepare("INSERT INTO poi_claimed (claimed_id, poi_id, player_name) VALUES (?, ?, ?)")
-				stmt:bind(1, os.time())
+				stmt:bind(1, claimedListNextId)
 				stmt:bind(2, poiList[i][0])
 	      stmt:bind(3, Player:GetName())
 	      stmt:step()
@@ -270,7 +282,7 @@ function poiOperatorList(Split, Player)
     i = i + 1
   end
 
-  return false
+  return true
 end
 
 --
@@ -291,7 +303,7 @@ function poiOperatorRemove(Split, Player)
         createArrayPoiList()
 
         Player:SendMessageSuccess(stringRemove[2])
-        return false
+        return true
       end
       i = i + 1
     end
@@ -320,7 +332,7 @@ function poiOperatorPurge(Split, Player)
 	        createArrayClaimedList()
 
 	        Player:SendMessageSuccess(stringPurge[2])
-	        return false
+	        return true
 	      end
 	      i = i + 1
 	    end
@@ -337,7 +349,7 @@ function poiOperatorPurge(Split, Player)
 	        createArrayClaimedList()
 
 	        Player:SendMessageSuccess(stringPurge[2])
-	        return false
+	        return true
 	      end
 	      i = i + 1
 	    end
@@ -366,7 +378,7 @@ function poiOperatorPurgeplayer(Split, Player)
 	      createArrayClaimedList()
 
 	      Player:SendMessageSuccess(stringPurgeplayer[2])
-	      return false
+	      return true
 	    end
 	    i = i + 1
 	  end
