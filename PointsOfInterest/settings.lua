@@ -5,7 +5,7 @@ setTeleportEffectAmmount = 100        -- Ammount of particles that spawn when pl
 
 setRewardxpEnabled = 1                -- Enables XP rewards for claiming a POI [0,1]
 setRewardxpSplashEnabled = 1          -- Enables a plash effect when the XP orb spawns [0,1]
-setRewardxpAmmount = 50               -- Ammount of XP rewarded to a player who calims a POI
+setRewardxpAmmount = 25               -- Ammount of XP rewarded to a player who calims a POI
 
 setRewardItemEnabled = 1              -- Enables item rewards for claiming a POI [0,1]
 setRewardItem = 341                   -- Item that gets added to player's inventory upon claiming a POI ()

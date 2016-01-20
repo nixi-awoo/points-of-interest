@@ -19,7 +19,7 @@ function poiMain(Split, Player)
 			Player:SendMessageSuccess(stringAmmount[1] .. poiListAmmount)
 		elseif (Split[2] == "list") and (checkPermission(Player, "poi.list") == true) then
 			poiOperatorList(Split, Player)
-		elseif (Split[2] == "tp") and (checkPermission(Player, "poi.list") == true) then
+		elseif (Split[2] == "tp") and (checkPermission(Player, "poi.teleport") == true) then
 			poiOperatorTeleport(Split, Player)
 		elseif (Split[2] == "remove") and (checkPermission(Player, "poi.remove") == true) then
 			poiOperatorRemove(Split, Player)
@@ -40,7 +40,7 @@ end
 function createArrayPoiList()
   -- Create an array of all POIs
   poiList = {}
-	poiListNextId = 0
+	poiListNextId = 1
 
   local i = 0
   local db = sqlite3.open(PLUGIN:GetLocalFolder() .. "/database.sqlite3")
@@ -302,25 +302,22 @@ function poiOperatorTeleport(Split, Player)
 	if (Split[3] == nil) then
     Player:SendMessageFailure(stringPurgeplayer[1])
   else
-		if (checkPermission(Player, "poi.teleport") == true) then
-			for i = 0, poiListAmmount-1 do
-		    if (tostring(poiList[i][0]) == Split[3]) then
-					if (setTeleportEffectEnabled == "out") or (setTeleportEffectEnabled == "both") then
-						poiOperatorTeleportEffect(Player)
-					end
-					Player:TeleportToCoords(poiList[i][2], poiList[i][3], poiList[i][4])
-		      Player:SendMessageSuccess(stringTeleport[1] .. poiList[i][1])
-					if (setTeleportEffectEnabled == "in") or (setTeleportEffectEnabled == "both") then
-						poiOperatorTeleportEffect(Player)
-					end
-					if (setTeleportEffectEnabled ~= "out") and (setTeleportEffectEnabled ~= "in") and (setTeleportEffectEnabled ~= "none") then
-						LOG(stringSettings[1] .. " setTeleportEffectEnabled = " .. setTeleportEffectEnabled)
-					end
-		    end
-		    i = i + 1
+		for i = 0, poiListAmmount-1 do
+		  if (tostring(poiList[i][0]) == Split[3]) then
+				if (setTeleportEffectEnabled == "out") or (setTeleportEffectEnabled == "both") then
+					poiOperatorTeleportEffect(Player)
+				end
+				Player:TeleportToCoords(poiList[i][2], poiList[i][3], poiList[i][4])
+		    Player:SendMessageSuccess(stringTeleport[1] .. poiList[i][1])
+				if (setTeleportEffectEnabled == "in") or (setTeleportEffectEnabled == "both") then
+					poiOperatorTeleportEffect(Player)
+				end
+				if (setTeleportEffectEnabled ~= "out") and (setTeleportEffectEnabled ~= "in") and (setTeleportEffectEnabled ~= "both") and (setTeleportEffectEnabled ~= "none") then
+					LOG(stringSettings[1] .. " setTeleportEffectEnabled = " .. setTeleportEffectEnabled)
+				end
 		  end
-			return true
-		end
+		  i = i + 1
+	  end
 		Player:SendMessageFailure(stringTeleport[2])
 	end
 end
