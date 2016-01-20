@@ -17,7 +17,7 @@ stringMain = {
 }
 
 stringSettings = {
-  "Unknown Setting:"
+  colourInfo .. "Unknown Setting:"
 }
 
 stringPermissions = {
@@ -61,6 +61,11 @@ stringList = {
 stringClaimed = {
   colourInfo .. "List of POIs claimed by you",
   colourInfo .. "List of POIs claimed by " .. colourPrimary
+}
+
+stringTeleport = {
+  colourInfo .. "Teleporting to " .. colourPrimary,
+  colourInfo .. "POI not found"
 }
 
 -- Strings for functions
