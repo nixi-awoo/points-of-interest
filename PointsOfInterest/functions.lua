@@ -242,16 +242,17 @@ end
 --
 
 function poiOperatorClaimed(Split, Player)
-	local string = ""
 	local ammount = 0
   if (Split[3] == nil) then
     -- List POIs claimed by the current player
+		Player:SendMessageSuccess(stringClaimed[1])
+		Player:SendMessage(stringList[2])
     for i = 0, claimedListAmmount-1 do
       if (claimedList[i][2] == Player:GetName()) then
         -- If there is a POI claimed by user
         for j = 0, poiListAmmount-1 do
           if (poiList[j][0] == claimedList[i][1]) then
-						string = string .. poiList[i][1] .. ", "
+						Player:SendMessage(colourHighlight .. poiList[i][0] .. colourDefault .. " - " .. colourPrimary .. poiList[i][1] .. colourDefault .. " - " .. colourSecondary .. poiList[i][2] .. " / " .. poiList[i][3] .. " / " .. poiList[i][4])
 						ammount = ammount + 1
           end
           j = j + 1
@@ -259,15 +260,16 @@ function poiOperatorClaimed(Split, Player)
       end
       i = i + 1
     end
-		Player:SendMessageSuccess(stringClaimed[1] .. colourDefault .. " (" .. colourHighlight .. ammount .. colourDefault .. ")")
   else
     -- List POIs claimed by a specific player
-    for i = 0, claimedListAmmount-1 do
+		Player:SendMessageSuccess(stringClaimed[2] .. colourPrimary .. Split[3])
+		Player:SendMessage(stringList[2])
+		for i = 0, claimedListAmmount-1 do
       if (claimedList[i][2] == Split[3]) then
         -- If there is a POI claimed by user
         for j = 0, poiListAmmount-1 do
           if (poiList[j][0] == claimedList[i][1]) then
-            string = string .. poiList[i][1] .. ", "
+						Player:SendMessage(colourHighlight .. poiList[i][0] .. colourDefault .. " - " .. colourPrimary .. poiList[i][1] .. colourDefault .. " - " .. colourSecondary .. poiList[i][2] .. " / " .. poiList[i][3] .. " / " .. poiList[i][4])
 						ammount = ammount + 1
           end
           j = j + 1
@@ -275,11 +277,7 @@ function poiOperatorClaimed(Split, Player)
       end
       i = i + 1
     end
-		Player:SendMessageSuccess(stringClaimed[2] .. colourPrimary .. Split[3] .. colourDefault .. " (" .. colourHighlight .. ammount .. colourDefault .. ")")
   end
-	if (string ~= "") then
-		Player:SendMessage(string)
-	end
 end
 
 --
@@ -300,25 +298,41 @@ end
 
 function poiOperatorTeleport(Split, Player)
 	if (Split[3] == nil) then
-    Player:SendMessageFailure(stringPurgeplayer[1])
+    Player:SendMessageFailure(stringTeleport[1])
   else
 		for i = 0, poiListAmmount-1 do
 		  if (tostring(poiList[i][0]) == Split[3]) then
-				if (setTeleportEffectEnabled == "out") or (setTeleportEffectEnabled == "both") then
-					poiOperatorTeleportEffect(Player)
-				end
-				Player:TeleportToCoords(poiList[i][2], poiList[i][3], poiList[i][4])
-		    Player:SendMessageSuccess(stringTeleport[1] .. poiList[i][1])
-				if (setTeleportEffectEnabled == "in") or (setTeleportEffectEnabled == "both") then
-					poiOperatorTeleportEffect(Player)
-				end
-				if (setTeleportEffectEnabled ~= "out") and (setTeleportEffectEnabled ~= "in") and (setTeleportEffectEnabled ~= "both") and (setTeleportEffectEnabled ~= "none") then
-					LOG(stringSettings[1] .. " setTeleportEffectEnabled = " .. setTeleportEffectEnabled)
+				if (setTeleportUnclaimed == 0) then
+					for j = 0, claimedListAmmount-1 do
+						if (tostring(claimedList[j][1]) == Split[3]) and (claimedList[j][2] == Player:GetName()) then
+							poiOperatorTeleportExecute(Split, Player, j)
+							return true
+						end
+						j = j + 1
+					end
+					Player:SendMessageFailure(stringTeleport[3])
+					return false
+				else
+					poiOperatorTeleportExecute(Split, Player, i)
+					return true
 				end
 		  end
 		  i = i + 1
 	  end
-		Player:SendMessageFailure(stringTeleport[2])
+		Player:SendMessageFailure(stringTeleport[4])
+	end
+end
+function poiOperatorTeleportExecute(Split, Player, i)
+	if (setTeleportEffectEnabled == "out") or (setTeleportEffectEnabled == "both") then
+		poiOperatorTeleportEffect(Player)
+	end
+	Player:TeleportToCoords(poiList[i][2], poiList[i][3], poiList[i][4])
+	Player:SendMessageSuccess(stringTeleport[2] .. poiList[i][1])
+	if (setTeleportEffectEnabled == "in") or (setTeleportEffectEnabled == "both") then
+		poiOperatorTeleportEffect(Player)
+	end
+	if (setTeleportEffectEnabled ~= "out") and (setTeleportEffectEnabled ~= "in") and (setTeleportEffectEnabled ~= "both") and (setTeleportEffectEnabled ~= "none") then
+		LOG(stringSettings[1] .. " setTeleportEffectEnabled = " .. setTeleportEffectEnabled)
 	end
 end
 

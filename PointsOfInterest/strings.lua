@@ -11,6 +11,7 @@ stringMain = {
   colourPrimary .. "/poi" .. colourSecondary  .." claimed {player}" .. colourDefault .. " - List claimed POIs",
   colourPrimary .. "/poi" .. colourSecondary  .." ammount" .. colourDefault .. " - Show the total ammount of POIs",
   colourPrimary .. "/poi" .. colourSecondary  .." list" .. colourDefault .. " - List all POIs",
+  colourPrimary .. "/poi" .. colourSecondary  .." tp" .. colourDefault .. " - Teleport to a POI",
   colourPrimary .. "/poi" .. colourSecondary  .." remove [id]" .. colourDefault .. " - Remove a POI with a specific id",
   colourPrimary .. "/poi" .. colourSecondary  .." purge [id] {player}" .. colourDefault .. " - Purge all claims with a POI id",
   colourPrimary .. "/poi" .. colourSecondary  .." purgeplayer [player]" .. colourDefault .. " - Purge all claims of a player"
@@ -64,7 +65,9 @@ stringClaimed = {
 }
 
 stringTeleport = {
+  colourInfo .. "No id specified",
   colourInfo .. "Teleporting to " .. colourPrimary,
+  colourInfo .. "You have not yet claimed this POI",
   colourInfo .. "POI not found"
 }
 

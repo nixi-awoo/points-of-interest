@@ -1,4 +1,5 @@
-setTeleportEnabled = 1                -- Enables teleportation to claimed POIs [0,1]
+setTeleportEnabled = 1                -- Enables teleportation to POIs [0,1]
+setTeleportUnclaimed = 0              -- Enables teleportation to unclaimed POIs [0,1]
 setTeleportEffectEnabled = "both"     -- Enables teleportation effects ["out", "in", "both", "none"]
 setTeleportEffect = "fireworksSpark"  -- Particle effect that spawns when player claims a POI
 setTeleportEffectAmmount = 100        -- Ammount of particles that spawn when player claims a POI
